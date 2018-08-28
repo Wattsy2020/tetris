@@ -1,6 +1,7 @@
 class Block{
     constructor(element){
         this.blockE = element;
+        this.blockE.style.backgroundColor = "white";
     }
     
     isOn(){
@@ -181,11 +182,10 @@ function getRandomInt(min, max) {
 
 // main game loop
 function spawnTetromino(){
-    var color = colors[getRandomInt(0, colors.length)];
+    var color = colors[getRandomInt(0, colors.length - 1)];
     newTet = new LTet(2, 3, color);
     newTet.activate();
     currentTetromino = newTet;
-    console.log("New spawn");
 }
 
 function checkKey(key){
@@ -216,7 +216,7 @@ const rows = 12;
 const cols = 8;
 const sideLength = 50;
 const timeInterval = 1000;
-const colors = ["Aqua", "Cyan", "DarkOrange", "DeepPink", "Fuchsia", "Maroon"];
+const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Maroon", "Blue", "Lime", "Green"];
 
 let grid;
 let currentTetromino;
