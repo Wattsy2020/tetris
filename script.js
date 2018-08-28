@@ -41,7 +41,10 @@ class Tetromino {
         this.blocks.every(pos => {
             if (pos[0] == position[0] && pos[1] == position[1]){
                 flag = true;
-                return false;
+            }
+            if (position[1] == 4){
+                console.log(this.blocks);
+                console.log(pos[0] + " : " + position[0] + " " + pos[1] + " : " + position[1]);
             }
         });
         return flag;
@@ -55,12 +58,14 @@ class Tetromino {
         positions.every(pos => {
             //check if block is outside the grid
             if (pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols){
+                console.log("Out of bounds");
                 flag = false;
                 return false;
             }
 
             //check if block overlaps with another block from a different tetromino
             if (grid[pos[0]][pos[1]].isOn() && !this.included(pos)){
+                console.log("Overlap at pos: " + pos);
                 flag = false;
                 return false;
             }
@@ -98,25 +103,34 @@ class Tetromino {
     }
 
     moveLeft(){
+        var newPositions = [];
+        this.blocks.forEach(pos => {
+            newPositions.push([pos[0], pos[1] - 1]);
+        });
 
+        if (this.noCollision(newPositions)){
+            this.switchPosition(newPositions);
+        }
     }
 
     moveRight(){
+        var newPositions = [];
+        this.blocks.forEach(pos => {
+            newPositions.push([pos[0], pos[1] + 1]);
+        });
 
+        if (this.noCollision(newPositions)){
+            this.switchPosition(newPositions);
+        }
     }
 
-    rotateLeft(){
-
-    }
-
-    rotateRight(){
-
-    }
-
-    //move the tetronimo down until it hits another block
     drop(){
         
     }
+
+    //to be defined in sub clases
+    rotateLeft(){}
+    rotateRight(){}
 }
 
 class LTet extends Tetromino {
@@ -132,7 +146,7 @@ class LTet extends Tetromino {
 function spawnTetromino(){
     newTet = new LTet(2, 3);
     newTet.activate();
-    tetrominos.push(newTet);
+    currentTetromino = newTet;
 }
 
 function createGrid(){
@@ -162,10 +176,34 @@ function createGrid(){
     return grid;
 }
 
+function checkKey(key){
+    switch (key.keyCode){
+        case 38: 
+            //up arrow
+            break;
+
+        case 40:
+            //down arrow
+            break;
+        
+        case 37:
+            currentTetromino.moveLeft();
+            break;
+
+        case 39:
+            currentTetromino.moveRight();
+            break;
+
+        case 32:
+            //space
+            break;
+    }
+}
+
 var rows = 12;
 var cols = 8;
 var sideLength = 50;
 var timeInterval = 1000;
 
-var tetrominos = [];
 let grid;
+let currentTetromino;
