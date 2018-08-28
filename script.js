@@ -36,41 +36,18 @@ class Tetromino {
 
     // checks if a block at position in the grid is part of the tetromino
     included(position){
-        var flag = false;
-
-        this.blocks.every(pos => {
-            if (pos[0] == position[0] && pos[1] == position[1]){
-                flag = true;
-            }
-            if (position[1] == 4){
-                console.log(this.blocks);
-                console.log(pos[0] + " : " + position[0] + " " + pos[1] + " : " + position[1]);
-            }
-        });
-        return flag;
+        return this.blocks.some(pos => pos[0] == position[0] && pos[1] == position[1]);
     }
 
-    // returns false if a new configuration of blocks would overlap with another block
-    // or go outside the grid, otherwise returns true
+    // returns false if the new configuration of blocks is not allowed, otherwise returns true
     noCollision(positions){
-        var flag = true;
+        //check if block is outside the grid
+        var outside = positions.some(pos => pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols);
+        if (outside){return false;}
 
-        positions.every(pos => {
-            //check if block is outside the grid
-            if (pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols){
-                console.log("Out of bounds");
-                flag = false;
-                return false;
-            }
-
-            //check if block overlaps with another block from a different tetromino
-            if (grid[pos[0]][pos[1]].isOn() && !this.included(pos)){
-                console.log("Overlap at pos: " + pos);
-                flag = false;
-                return false;
-            }
-        });
-        return flag;
+        //check if block overlaps with another block from a different tetromino
+        var overlap = positions.some(pos => grid[pos[0]][pos[1]].isOn() && !this.included(pos));
+        return !overlap;
     }
 
     // turn off current blocks and turn on blocks in the new positions
