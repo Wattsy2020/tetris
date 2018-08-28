@@ -70,6 +70,7 @@ class Tetromino {
         });
 
         if (this.noCollision(newPositions)){
+            this.center_row += 1;
             this.switchPosition(newPositions);
         }
 
@@ -86,6 +87,7 @@ class Tetromino {
         });
 
         if (this.noCollision(newPositions)){
+            this.center_col -= 1;
             this.switchPosition(newPositions);
         }
     }
@@ -97,6 +99,7 @@ class Tetromino {
         });
 
         if (this.noCollision(newPositions)){
+            this.center_col += 1;
             this.switchPosition(newPositions);
         }
     }
@@ -140,9 +143,8 @@ class LTet extends Tetromino {
     constructor(center_row, center_col){
         super(center_row, center_col);
 
-        // create references to blocks on the grid using [row of block, column of block]
-        this.blocks = [[center_row, center_col], [center_row, center_col + 1],
-                       [center_row - 1, center_col], [center_row - 2, center_col]];
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
+                       [center_row - 1, center_col], [center_row + 1, center_col]];
     }
 }
 
