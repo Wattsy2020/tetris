@@ -139,11 +139,61 @@ class Tetromino {
     }
 }
 
-class LTet extends Tetromino {
+class LTet1 extends Tetromino {
     constructor(center_row, center_col, color){
         super(center_row, center_col, color);
         this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
                        [center_row - 1, center_col], [center_row + 1, center_col]];
+    }
+}
+
+class LTet2 extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col - 1],
+                       [center_row - 1, center_col], [center_row + 1, center_col]];
+    }
+}
+
+class ZTet1 extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
+                       [center_row - 1, center_col], [center_row, center_col + 1]];
+    }
+}
+
+class ZTet2 extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row - 1, center_col + 1],
+                       [center_row + 1, center_col], [center_row, center_col + 1]];
+    }
+}
+
+class TTet extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col],
+                       [center_row - 1, center_col], [center_row, center_col + 1]];
+    }
+}
+
+class STet extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
+                       [center_row + 1, center_col], [center_row, center_col + 1]];
+    }
+
+    rotate(){} //square shouldn't rotate
+}
+
+class ITet extends Tetromino {
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
+        this.blocks = [[center_row, center_col], [center_row + 1, center_col],
+                       [center_row - 1, center_col], [center_row + 2, center_col]];
     }
 }
 
@@ -183,7 +233,32 @@ function getRandomInt(min, max) {
 // main game loop
 function spawnTetromino(){
     var color = colors[getRandomInt(0, colors.length - 1)];
-    newTet = new LTet(2, 3, color);
+
+    var type = getRandomInt(0, 6);
+    switch (type){
+        case 0:
+            newTet = new LTet1(1, 3, color);
+            break;
+        case 1:
+            newTet = new LTet2(1, 3, color);
+            break;
+        case 2:
+            newTet = new ZTet1(1, 3, color);
+            break;
+        case 3:
+            newTet = new ZTet2(1, 3, color);
+            break;
+        case 4:
+            newTet = new TTet(1, 3, color);
+            break;
+        case 5:
+            newTet = new STet(1, 3, color);
+            break;
+        case 6:
+            newTet = new ITet(1, 3, color);
+            break;
+    }
+
     newTet.activate();
     currentTetromino = newTet;
 }
