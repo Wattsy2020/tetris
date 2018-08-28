@@ -1,0 +1,7 @@
+.block {
+    outline: 3px solid black;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
