@@ -31,7 +31,7 @@ class Tetromino {
 
         // start moving the tetromino
         var t = this;
-        this.gravitySchedule = setInterval(function(){t.moveDown();}, timeInterval);
+        this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval);
     }
 
     // checks if a block at position in the grid is part of the tetromino
@@ -41,11 +41,11 @@ class Tetromino {
 
     // returns false if the new configuration of blocks is not allowed, otherwise returns true
     noCollision(positions){
-        //check if block is outside the grid
+        // check if block is outside the grid
         var outside = positions.some(pos => pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols);
         if (outside){return false;}
 
-        //check if block overlaps with another block from a different tetromino
+        // check if block overlaps with another block from a different tetromino
         var overlap = positions.some(pos => grid[pos[0]][pos[1]].isOn() && !this.included(pos));
         return !overlap;
     }
@@ -74,7 +74,7 @@ class Tetromino {
         }
 
         else{
-            clearInterval(this.gravitySchedule);
+            clearInterval(this.fallSchedule);
             spawnTetromino();
         }
     }
@@ -101,11 +101,14 @@ class Tetromino {
         }
     }
 
+    // drop the object by increasing the speed it falls
     drop(){
-        
+        clearInterval(this.fallSchedule);
+        var t = this;
+        this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval/100);
     }
 
-    //to be defined in sub clases
+    // to be defined in sub clases
     rotateLeft(){}
     rotateRight(){}
 }
@@ -114,18 +117,14 @@ class LTet extends Tetromino {
     constructor(center_row, center_col){
         super(center_row, center_col);
 
-        //create references to blocks on the grid using [row of block, column of block]
+        // create references to blocks on the grid using [row of block, column of block]
         this.blocks = [[center_row, center_col], [center_row, center_col + 1],
                        [center_row - 1, center_col], [center_row - 2, center_col]];
     }
 }
 
-function spawnTetromino(){
-    newTet = new LTet(2, 3);
-    newTet.activate();
-    currentTetromino = newTet;
-}
-
+// dynamically create a grid of divs with CSS class block
+// then create Blocks and add them to the grid so they can be manipulated by js
 function createGrid(){
     var grid = [];
     var lengthStr = sideLength+"px";
@@ -144,13 +143,20 @@ function createGrid(){
             newBlock.style.top = 10 + i*sideLength;
             newBlock.style.left = 10 + j*sideLength;
             
-            var prevBlock = document.getElementById(id - 1);
-            document.body.insertBefore(newBlock, prevBlock);
+            var container = document.getElementById("container");
+            container.appendChild(newBlock);
             row.push(new Block(newBlock));
         }
         grid.push(row)
     }
     return grid;
+}
+
+// main game loop
+function spawnTetromino(){
+    newTet = new LTet(2, 3);
+    newTet.activate();
+    currentTetromino = newTet;
 }
 
 function checkKey(key){
@@ -172,15 +178,15 @@ function checkKey(key){
             break;
 
         case 32:
-            //space
+            currentTetromino.drop();
             break;
     }
 }
 
-var rows = 12;
-var cols = 8;
-var sideLength = 50;
-var timeInterval = 1000;
+const rows = 12;
+const cols = 8;
+const sideLength = 50;
+const timeInterval = 1000;
 
 let grid;
 let currentTetromino;
