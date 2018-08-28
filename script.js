@@ -108,9 +108,32 @@ class Tetromino {
         this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval/100);
     }
 
-    // to be defined in sub clases
-    rotateLeft(){}
-    rotateRight(){}
+    // converts the location of the Tetrominos blocks on the grid into
+    // the location of the blocks from the center of the Tetromino
+    // also performs the reverse operation
+    blockDistanceFromCenter(grid){
+        var matrix = [];
+        grid.forEach(pos => {
+            matrix.push([this.center_row - pos[0], this.center_col - pos[1]]);
+        });
+        return matrix;
+    }
+
+    // rotate a Tetromino around it's center (direction = -1 means anti clockwise)
+    // uses the fact that if the dot product of two vectors is 0 they are perpendicular
+    rotate(direction){
+        var centerDistances = this.blockDistanceFromCenter(this.blocks);
+
+        var rotated = [];
+        centerDistances.forEach(pos => {
+            rotated.push([-direction*pos[1], direction*pos[0]]);
+        });
+
+        rotated = this.blockDistanceFromCenter(rotated);
+        if (this.noCollision(rotated)){
+            this.switchPosition(rotated);
+        }
+    }
 }
 
 class LTet extends Tetromino {
@@ -162,11 +185,11 @@ function spawnTetromino(){
 function checkKey(key){
     switch (key.keyCode){
         case 38: 
-            //up arrow
+            currentTetromino.rotate(-1);
             break;
 
         case 40:
-            //down arrow
+            currentTetromino.rotate(1);
             break;
         
         case 37:
