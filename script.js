@@ -4,30 +4,29 @@ class Block{
     }
     
     isOn(){
-        return this.blockE.style.backgroundColor == "lime";
+        return this.blockE.style.backgroundColor != "white";
     }
     
     turnOff(){
         this.blockE.style.backgroundColor = "white";
     }
 
-    turnOn(){
-        this.blockE.style.backgroundColor = "lime";
+    turnOn(color){
+        this.blockE.style.backgroundColor = color;
     }
 }
 
 class Tetromino {
-    constructor(center_row, center_col){
+    constructor(center_row, center_col, color){
         this.center_row = center_row;
-        this.center_col = center_col; 
+        this.center_col = center_col;
+        this.color = color; 
         this.blocks = [];
     }
 
     // turns on the tetromino (only used once after initialisation)
     activate(){
-        this.blocks.forEach(pos => {
-            grid[pos[0]][pos[1]].turnOn();
-        });
+        this.switchPosition(this.blocks);
 
         // start moving the tetromino
         var t = this;
@@ -57,7 +56,7 @@ class Tetromino {
         });
 
         newPositions.forEach(pos => {
-            grid[pos[0]][pos[1]].turnOn();
+            grid[pos[0]][pos[1]].turnOn(this.color);
         });
 
         this.blocks = newPositions;
@@ -140,9 +139,8 @@ class Tetromino {
 }
 
 class LTet extends Tetromino {
-    constructor(center_row, center_col){
-        super(center_row, center_col);
-
+    constructor(center_row, center_col, color){
+        super(center_row, center_col, color);
         this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
                        [center_row - 1, center_col], [center_row + 1, center_col]];
     }
@@ -177,11 +175,17 @@ function createGrid(){
     return grid;
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // main game loop
 function spawnTetromino(){
-    newTet = new LTet(2, 3);
+    var color = colors[getRandomInt(0, colors.length)];
+    newTet = new LTet(2, 3, color);
     newTet.activate();
     currentTetromino = newTet;
+    console.log("New spawn");
 }
 
 function checkKey(key){
@@ -212,6 +216,7 @@ const rows = 12;
 const cols = 8;
 const sideLength = 50;
 const timeInterval = 1000;
+const colors = ["Aqua", "Cyan", "DarkOrange", "DeepPink", "Fuchsia", "Maroon"];
 
 let grid;
 let currentTetromino;
