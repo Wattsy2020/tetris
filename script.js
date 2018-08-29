@@ -61,11 +61,15 @@ class Tetromino {
         return !overlap;
     }
 
-    // turn off current blocks and turn on blocks in the new positions
-    switchPosition(newPositions){
+    turnOffBlocks(){
         this.blocks.forEach(pos => {
             grid[pos[0]][pos[1]].turnOff();
         });
+    }
+
+    // turn off current blocks and turn on blocks in the new positions
+    switchPosition(newPositions){
+        this.turnOffBlocks();
 
         newPositions.forEach(pos => {
             grid[pos[0]][pos[1]].turnOn(this.color);
@@ -358,7 +362,44 @@ function checkKey(key){
     }
 }
 
-function gameLoop(gameOver = false){
+function clearBlock(){
+    toClear[blockCounter].turnOff();
+
+    blockCounter++;
+    if (blockCounter == toClear.length){
+        clearInterval(clearBlockSchedule);
+        displayGameOver();
+    }
+}
+
+function clearGrid(){
+    // construct list of blocks to turn off
+    toClear = [];
+    grid.forEach(row => {
+        row.forEach(block => {
+            if (block.isOn()){
+                toClear.push(block);
+            }
+        })
+    });
+
+    blockCounter = 0;
+    clearBlockSchedule = setInterval(clearBlock, 50);
+}
+
+function displayGameOver(){
+    document.getElementById("overlay").style.visibility = "visible";
+    document.getElementById("retryButton").style.visibility = "visible";
+    document.getElementById("displayText").textContent = "Game Over";
+}
+
+function reset(){
+    document.getElementById("overlay").style.visibility = "hidden";
+    document.getElementById("retryButton").style.visibility = "hidden";
+    gameLoop();
+}
+
+function gameLoop(){
     var newTet = createTetromino();
 
     if (!newTet.gameOver()){
@@ -366,12 +407,18 @@ function gameLoop(gameOver = false){
         currentTetromino = newTet;
     }
     else{
-        // display Game Over message
-        document.getElementById("overlay").style.visibility = "visible";
-        document.getElementById("displayText").textContent = "Game Over";
+        // flash Tetromino
+        var turnOff = function(){newTet.turnOffBlocks();};
+        var turnOn = function(){newTet.switchPosition(newTet.blocks);};
+
+        turnOn();
+        setTimeout(turnOff, 1000);
+        setTimeout(turnOn, 2000);
+        setTimeout(turnOff, 3000);
+        setTimeout(turnOn, 4000);
         
-        // have an animation remove every block one by one
-        // display retry button
+        // remove every block one by one, once finished display the Game Over Screen
+        setTimeout(clearGrid, 5000); 
     }
 }
 
@@ -380,6 +427,11 @@ const cols = 10;
 const sideLength = 40;
 const timeInterval = 1000;
 const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Red", "Blue", "Lime", "Green"];
+
+// used for Game over animation
+let clearBlockSchedule;
+let toClear;
+let blockCounter;
 
 let currentTetromino;
 var grid = [];

@@ -21,7 +21,7 @@
 .textBackground {
     width: 300px;
     height: 100px;
-    background-color: white;
+    background-color: grey;
     
     display: flex;
     align-items: center;
@@ -44,10 +44,22 @@
     visibility: hidden;
 }
 
+#retryButton {
+    width: 120px;
+    height: 40px;
+
+    background-color: grey;
+    font-family: Arial;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 h1 {
     font-size: 48px;
     font-family: Arial;
-    color: black;
+    color: white;
     position: absolute;
     margin: 0;
 }

@@ -8,9 +8,23 @@
 	<body>
 		<div class = "container">
 			<div id="overlay">
-				<div class = "textBackground">
-					<h1 id="displayText">Game Over</h1>
-				</div>
+				<table border="0">
+					<tr>
+						<td>
+							<div class = "textBackground">
+								<h1 id="displayText">Game Over</h1>
+							</div>
+						</td>
+					</tr>
+					<tr height="10px" />
+					<tr>
+						<td align="center">
+							<button type="button" id="retryButton" onclick="reset()">
+								<h1 style="font-size: 22;">Retry</h1>
+							</button>
+						</td>
+					</tr>
+				</table>
 			</div>
 			<div id="blockContainer" class="base" />
 		</div>
