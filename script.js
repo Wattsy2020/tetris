@@ -282,25 +282,25 @@ function spawnTetromino(){
     var type = getRandomInt(0, 6);
     switch (type){
         case 0:
-            newTet = new LTet1(1, 3, color);
+            newTet = new LTet1(1, cols/2, color);
             break;
         case 1:
-            newTet = new LTet2(1, 3, color);
+            newTet = new LTet2(1, cols/2, color);
             break;
         case 2:
-            newTet = new ZTet1(1, 3, color);
+            newTet = new ZTet1(1, cols/2, color);
             break;
         case 3:
-            newTet = new ZTet2(1, 3, color);
+            newTet = new ZTet2(1, cols/2, color);
             break;
         case 4:
-            newTet = new TTet(1, 3, color);
+            newTet = new TTet(1, cols/2, color);
             break;
         case 5:
-            newTet = new STet(1, 3, color);
+            newTet = new STet(1, cols/2, color);
             break;
         case 6:
-            newTet = new ITet(1, 3, color);
+            newTet = new ITet(1, cols/2, color);
             break;
     }
 
@@ -332,9 +332,9 @@ function checkKey(key){
     }
 }
 
-const rows = 12;
-const cols = 8;
-const sideLength = 50;
+const rows = 18;
+const cols = 10;
+const sideLength = 40;
 const timeInterval = 1000;
 const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Red", "Blue", "Lime", "Green"];
 
