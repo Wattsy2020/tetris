@@ -98,9 +98,9 @@ class Tetromino {
                 }
             });
 
-            // move rows down into place and spawn new Tetromino
+            // move rows down into place and call gameLoop by raising an event
             setTimeout(moveRowsDown, 200);
-            setTimeout(gameLoop, 300);
+            setTimeout(function(){container.dispatchEvent(lockedInPlace);}, 300);
         }
     }
 
@@ -272,7 +272,6 @@ function createGrid(){
             newBlock.style.top = 10 + i*sideLength;
             newBlock.style.left = 10 + j*sideLength;
             
-            var container = document.getElementById("blockContainer");
             container.appendChild(newBlock);
             row.push(new Block(newBlock));
         }
@@ -385,3 +384,4 @@ const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Red", "Blue", "Lim
 let currentTetromino;
 var grid = [];
 var paused = false;
+var lockedInPlace = new CustomEvent("lockedInPlace"); // track when a block is locked into place

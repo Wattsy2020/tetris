@@ -16,8 +16,12 @@
 		</div>
 		
 		<script>
+			var container = document.getElementById("blockContainer");
 			grid = createGrid();
-			document.onkeydown = checkKey; //add event listener
+
+			document.onkeydown = checkKey;
+			container.addEventListener("lockedInPlace", gameLoop);			
+
 			gameLoop();
 		</script>
 	</body>
