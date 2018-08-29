@@ -31,7 +31,14 @@ class Tetromino {
 
     // turns on the tetromino (only used once after initialisation)
     activate(){
-        this.switchPosition(this.blocks);
+        // if any of the blocks the tetromino would take up are on the game is over
+        if (!this.blocks.some(pos => grid[pos[0]][pos[1]].isOn())){
+            this.switchPosition(this.blocks);
+        }
+        else{
+            gameLoop(true);
+            return;
+        }
 
         // start moving the tetromino
         var t = this;
@@ -45,6 +52,8 @@ class Tetromino {
 
     // returns false if the new configuration of blocks is not allowed, otherwise returns true
     noCollision(positions){
+        if (paused){return false;}
+
         // check if block is outside the grid
         var outside = positions.some(pos => pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols);
         if (outside){return false;}
@@ -68,6 +77,8 @@ class Tetromino {
     }
 
     moveDown(){
+        if (paused){return;}
+
         var newPositions = [];
         this.blocks.forEach(pos => {
             newPositions.push([pos[0] + 1, pos[1]]);
@@ -90,7 +101,7 @@ class Tetromino {
 
             // move rows down into place and spawn new Tetromino
             setTimeout(moveRowsDown, 200);
-            setTimeout(spawnTetromino, 300);
+            setTimeout(gameLoop, 300);
         }
     }
 
@@ -329,6 +340,22 @@ function checkKey(key){
         case 32:
             currentTetromino.drop();
             break;
+
+        case 80:
+            paused = !paused;
+            break;
+    }
+}
+
+function gameLoop(gameOver = false){
+    if (!gameOver){
+        spawnTetromino();
+    }
+    else{
+        console.log("Game over");
+        // display Game Over overlay
+        // have an animation remove every block one by one
+        // display retry button
     }
 }
 
@@ -338,5 +365,6 @@ const sideLength = 40;
 const timeInterval = 1000;
 const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Red", "Blue", "Lime", "Green"];
 
-let grid;
 let currentTetromino;
+var grid = [];
+var paused = false;
