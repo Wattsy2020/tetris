@@ -273,12 +273,18 @@ function createGrid(){
             newBlock.style.top = 10 + i*sideLength;
             newBlock.style.left = 10 + j*sideLength;
             
-            var container = document.getElementById("container");
+            var container = document.getElementById("blockContainer");
             container.appendChild(newBlock);
             row.push(new Block(newBlock));
         }
         grid.push(row)
     }
+
+    // set size of overlay to match the grid
+    var overlay = document.getElementById("overlay");
+    overlay.style.width = (cols*sideLength + 20)+ "px";
+    overlay.style.height = (rows*sideLength + 20) + "px";
+
     return grid;
 }
 
@@ -343,6 +349,14 @@ function checkKey(key){
 
         case 80:
             paused = !paused;
+            var overlay = document.getElementById("overlay");
+            if (paused){
+                overlay.style.visibility = "visible";
+                document.getElementById("displayText").textContent = "Paused";
+            }
+            else{
+                overlay.style.visibility = "hidden";
+            }
             break;
     }
 }
@@ -352,8 +366,10 @@ function gameLoop(gameOver = false){
         spawnTetromino();
     }
     else{
-        console.log("Game over");
-        // display Game Over overlay
+        // display Game Over message
+        document.getElementById("overlay").style.visibility = "visible";
+        document.getElementById("displayText").textContent = "Game Over";
+        
         // have an animation remove every block one by one
         // display retry button
     }

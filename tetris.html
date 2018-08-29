@@ -6,11 +6,19 @@
 	</head>
 	
 	<body>
-		<div id="container" />
+		<div class = "container">
+			<div id="overlay">
+				<div class = "textBackground">
+					<h1 id="displayText">Game Over</h1>
+				</div>
+			</div>
+			<div id="blockContainer" class="base" />
+		</div>
+		
 		<script>
-		grid = createGrid();
-		document.onkeydown = checkKey; //add event listener
-		gameLoop();
+			grid = createGrid();
+			document.onkeydown = checkKey; //add event listener
+			gameLoop();
 		</script>
 	</body>
 </html>
