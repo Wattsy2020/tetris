@@ -7,6 +7,10 @@ class Block{
     isOn(){
         return this.blockE.style.backgroundColor != "white";
     }
+
+    getColor(){
+        return this.blockE.style.backgroundColor;
+    }
     
     turnOff(){
         this.blockE.style.backgroundColor = "white";
@@ -76,7 +80,17 @@ class Tetromino {
 
         else{
             clearInterval(this.fallSchedule);
-            spawnTetromino();
+
+            // clear any full rows
+            grid.forEach(row => {
+                if (rowFull(row)){
+                    clearRow(row);
+                }
+            });
+
+            // move rows down into place and spawn new Tetromino
+            setTimeout(moveRowsDown, 200);
+            setTimeout(spawnTetromino, 300);
         }
     }
 
@@ -197,6 +211,37 @@ class ITet extends Tetromino {
     }
 }
 
+// moves entire rows down at a time after rows have been cleared
+function moveRowsDown(){
+    var downAmount = 0; // ammount to move rows down by
+    for (var i = rows - 1; i >= 0; i--){
+        if (rowEmpty(grid[i])){
+            downAmount += 1;
+        }
+        else{ // move row down by downAmount
+            for (var j = 0; j < grid[i].length; j++){
+                if (grid[i][j].isOn()){
+                    var color = grid[i][j].getColor();
+                    grid[i][j].turnOff();
+                    grid[i+downAmount][j].turnOn(color);
+                }
+            }
+        }
+    }
+}
+
+function rowFull(row){
+    return row.every(block => block.isOn());
+}
+
+function clearRow(row){
+    row.forEach(block => block.turnOff());
+}
+
+function rowEmpty(row){
+    return row.every(block => !block.isOn());
+}
+
 // dynamically create a grid of divs with CSS class block
 // then create Blocks and add them to the grid so they can be manipulated by js
 function createGrid(){
@@ -291,7 +336,7 @@ const rows = 12;
 const cols = 8;
 const sideLength = 50;
 const timeInterval = 1000;
-const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Maroon", "Blue", "Lime", "Green"];
+const colors = ["Aqua", "DarkOrange", "DeepPink", "Fuchsia", "Red", "Blue", "Lime", "Green"];
 
 let grid;
 let currentTetromino;
