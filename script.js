@@ -29,16 +29,14 @@ class Tetromino {
         this.blocks = [];
     }
 
+    // checks if placing the tetromino is not possible i.e. game is over
+    gameOver(){
+        return this.blocks.some(pos => grid[pos[0]][pos[1]].isOn());
+    }
+
     // turns on the tetromino (only used once after initialisation)
     activate(){
-        // if any of the blocks the tetromino would take up are on the game is over
-        if (!this.blocks.some(pos => grid[pos[0]][pos[1]].isOn())){
-            this.switchPosition(this.blocks);
-        }
-        else{
-            gameLoop(true);
-            return;
-        }
+        this.switchPosition(this.blocks);
 
         // start moving the tetromino
         var t = this;
@@ -90,6 +88,7 @@ class Tetromino {
         }
 
         else{
+            currentTetromino = null;
             clearInterval(this.fallSchedule);
 
             // clear any full rows
@@ -207,8 +206,8 @@ class TTet extends Tetromino {
 class STet extends Tetromino {
     constructor(center_row, center_col, color){
         super(center_row, center_col, color);
-        this.blocks = [[center_row, center_col], [center_row + 1, center_col + 1],
-                       [center_row + 1, center_col], [center_row, center_col + 1]];
+        this.blocks = [[center_row, center_col], [center_row - 1, center_col + 1],
+                       [center_row - 1, center_col], [center_row, center_col + 1]];
     }
 
     rotate(){} //square shouldn't rotate
@@ -292,8 +291,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// main game loop
-function spawnTetromino(){
+function createTetromino(){
     var color = colors[getRandomInt(0, colors.length - 1)];
 
     var type = getRandomInt(0, 6);
@@ -320,12 +318,12 @@ function spawnTetromino(){
             newTet = new ITet(1, cols/2, color);
             break;
     }
-
-    newTet.activate();
-    currentTetromino = newTet;
+    return newTet;
 }
 
 function checkKey(key){
+    if (currentTetromino == null){return;}
+
     switch (key.keyCode){
         case 38: 
             currentTetromino.rotate(-1);
@@ -362,8 +360,11 @@ function checkKey(key){
 }
 
 function gameLoop(gameOver = false){
-    if (!gameOver){
-        spawnTetromino();
+    var newTet = createTetromino();
+
+    if (!newTet.gameOver()){
+        newTet.activate();
+        currentTetromino = newTet;
     }
     else{
         // display Game Over message
