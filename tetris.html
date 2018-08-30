@@ -19,8 +19,8 @@
 					<tr height="10px" />
 					<tr>
 						<td align="center">
-							<button type="button" id="retryButton" onclick="reset()">
-								<h1 style="font-size: 22;">Retry</h1>
+							<button type="button" id="restartButton" onclick="reset()">
+								<h1 style="font-size: 22;">Restart</h1>
 							</button>
 						</td>
 					</tr>
@@ -31,6 +31,8 @@
 		
 		<script>
 			var container = document.getElementById("blockContainer");
+			var overlay = document.getElementById("overlay");
+			var displayText = document.getElementById("displayText");
 			grid = createGrid();
 
 			document.onkeydown = checkKey;

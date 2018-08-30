@@ -273,8 +273,8 @@ function createGrid(){
             
             newBlock.style.width = lengthStr;
             newBlock.style.height = lengthStr;
-            newBlock.style.top = 10 + i*sideLength;
-            newBlock.style.left = 10 + j*sideLength;
+            newBlock.style.top = i*sideLength;
+            newBlock.style.left = j*sideLength;
             
             container.appendChild(newBlock);
             row.push(new Block(newBlock));
@@ -282,10 +282,12 @@ function createGrid(){
         grid.push(row)
     }
 
-    // set size of overlay to match the grid
+    // set size of overlay and container to match the grid
     var overlay = document.getElementById("overlay");
     overlay.style.width = (cols*sideLength + 20)+ "px";
     overlay.style.height = (rows*sideLength + 20) + "px";
+    container.style.width = (cols*sideLength)+"px";
+    container.style.height = (rows*sideLength)+ "px";
 
     return grid;
 }
@@ -350,10 +352,8 @@ function checkKey(key){
 
         case 80:
             paused = !paused;
-            var overlay = document.getElementById("overlay");
             if (paused){
-                overlay.style.visibility = "visible";
-                document.getElementById("displayText").textContent = "Paused";
+                displayMessage("Paused");
             }
             else{
                 overlay.style.visibility = "hidden";
@@ -368,7 +368,7 @@ function clearBlock(){
     blockCounter++;
     if (blockCounter == toClear.length){
         clearInterval(clearBlockSchedule);
-        displayGameOver();
+        displayMessage("Game Over");
     }
 }
 
@@ -387,15 +387,22 @@ function clearGrid(){
     clearBlockSchedule = setInterval(clearBlock, 50);
 }
 
-function displayGameOver(){
-    document.getElementById("overlay").style.visibility = "visible";
-    document.getElementById("retryButton").style.visibility = "visible";
-    document.getElementById("displayText").textContent = "Game Over";
+function displayMessage(message){
+    overlay.style.visibility = "visible";
+    displayText.textContent = message;
 }
 
 function reset(){
-    document.getElementById("overlay").style.visibility = "hidden";
-    document.getElementById("retryButton").style.visibility = "hidden";
+    // reset the game state, needed if reset() is called when paused
+    if (currentTetromino != null){
+        grid.forEach(row => { 
+            clearRow(row);
+        });
+        clearInterval(currentTetromino.fallSchedule);
+        paused = false;
+    }
+
+    overlay.style.visibility = "hidden";
     gameLoop();
 }
 
