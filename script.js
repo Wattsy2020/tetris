@@ -39,7 +39,7 @@ class Tetromino {
         this.switchPosition(this.blocks);
 
         // start moving the tetromino
-        var t = this;
+        let t = this;
         this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval);
     }
 
@@ -53,11 +53,11 @@ class Tetromino {
         if (paused){return false;}
 
         // check if block is outside the grid
-        var outside = positions.some(pos => pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols);
+        let outside = positions.some(pos => pos[0] < 0 || pos[0] >= rows || pos[1] < 0 || pos[1] >= cols);
         if (outside){return false;}
 
         // check if block overlaps with another block from a different tetromino
-        var overlap = positions.some(pos => grid[pos[0]][pos[1]].isOn() && !this.included(pos));
+        let overlap = positions.some(pos => grid[pos[0]][pos[1]].isOn() && !this.included(pos));
         return !overlap;
     }
 
@@ -81,7 +81,7 @@ class Tetromino {
     moveDown(){
         if (paused){return;}
 
-        var newPositions = [];
+        let newPositions = [];
         this.blocks.forEach(pos => {
             newPositions.push([pos[0] + 1, pos[1]]);
         });
@@ -109,7 +109,7 @@ class Tetromino {
     }
 
     moveLeft(){
-        var newPositions = [];
+        let newPositions = [];
         this.blocks.forEach(pos => {
             newPositions.push([pos[0], pos[1] - 1]);
         });
@@ -121,7 +121,7 @@ class Tetromino {
     }
 
     moveRight(){
-        var newPositions = [];
+        let newPositions = [];
         this.blocks.forEach(pos => {
             newPositions.push([pos[0], pos[1] + 1]);
         });
@@ -135,7 +135,7 @@ class Tetromino {
     // drop the object by increasing the speed it falls
     drop(){
         clearInterval(this.fallSchedule);
-        var t = this;
+        let t = this;
         this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval/100);
     }
 
@@ -143,7 +143,7 @@ class Tetromino {
     // the location of the blocks from the center of the Tetromino
     // also performs the reverse operation
     blockDistanceFromCenter(grid){
-        var matrix = [];
+        let matrix = [];
         grid.forEach(pos => {
             matrix.push([this.center_row - pos[0], this.center_col - pos[1]]);
         });
@@ -153,9 +153,9 @@ class Tetromino {
     // rotate a Tetromino around it's center (direction = -1 means anti clockwise)
     // uses the fact that if the dot product of two vectors is 0 they are perpendicular
     rotate(direction){
-        var centerDistances = this.blockDistanceFromCenter(this.blocks);
+        let centerDistances = this.blockDistanceFromCenter(this.blocks);
 
-        var rotated = [];
+        let rotated = [];
         centerDistances.forEach(pos => {
             rotated.push([-direction*pos[1], direction*pos[0]]);
         });
@@ -227,15 +227,15 @@ class ITet extends Tetromino {
 
 // moves entire rows down at a time after rows have been cleared
 function moveRowsDown(){
-    var downAmount = 0; // ammount to move rows down by
-    for (var i = rows - 1; i >= 0; i--){
+    let downAmount = 0; // ammount to move rows down by
+    for (let i = rows - 1; i >= 0; i--){
         if (rowEmpty(grid[i])){
             downAmount += 1;
         }
         else{ // move row down by downAmount
-            for (var j = 0; j < grid[i].length; j++){
+            for (let j = 0; j < grid[i].length; j++){
                 if (grid[i][j].isOn()){
-                    var color = grid[i][j].getColor();
+                    let color = grid[i][j].getColor();
                     grid[i][j].turnOff();
                     grid[i+downAmount][j].turnOn(color);
                 }
@@ -259,15 +259,15 @@ function rowEmpty(row){
 // dynamically create a grid of divs with CSS class block
 // then create Blocks and add them to the grid so they can be manipulated by js
 function createGrid(){
-    var grid = [];
-    var lengthStr = sideLength+"px";
+    let grid = [];
+    let lengthStr = sideLength+"px";
 
-    for (i = 0; i < rows; i++){
-        var row = [];
+    for (let i = 0; i < rows; i++){
+        let row = [];
         
-        for (j = 0; j < cols; j++){
-            var id = i*rows + j;
-            var newBlock = document.createElement("div");
+        for (let j = 0; j < cols; j++){
+            let id = i*rows + j;
+            let newBlock = document.createElement("div");
             newBlock.className = "block";
             newBlock.id = id;
             
@@ -283,7 +283,6 @@ function createGrid(){
     }
 
     // set size of overlay and container to match the grid
-    var overlay = document.getElementById("overlay");
     overlay.style.width = (cols*sideLength + 20)+ "px";
     overlay.style.height = (rows*sideLength + 20) + "px";
     container.style.width = (cols*sideLength)+"px";
@@ -297,9 +296,9 @@ function getRandomInt(min, max) {
 }
 
 function createTetromino(){
-    var color = colors[getRandomInt(0, colors.length - 1)];
+    let color = colors[getRandomInt(0, colors.length - 1)];
 
-    var type = getRandomInt(0, 6);
+    let type = getRandomInt(0, 6);
     switch (type){
         case 0:
             newTet = new LTet1(1, cols/2, color);
@@ -407,7 +406,7 @@ function reset(){
 }
 
 function gameLoop(){
-    var newTet = createTetromino();
+    let newTet = createTetromino();
 
     if (!newTet.gameOver()){
         newTet.activate();
@@ -415,8 +414,8 @@ function gameLoop(){
     }
     else{
         // flash Tetromino
-        var turnOff = function(){newTet.turnOffBlocks();};
-        var turnOn = function(){newTet.switchPosition(newTet.blocks);};
+        let turnOff = function(){newTet.turnOffBlocks();};
+        let turnOn = function(){newTet.switchPosition(newTet.blocks);};
 
         turnOn();
         setTimeout(turnOff, 1000);
@@ -441,6 +440,6 @@ let toClear;
 let blockCounter;
 
 let currentTetromino;
-var grid = [];
-var paused = false;
-var lockedInPlace = new CustomEvent("lockedInPlace"); // track when a block is locked into place
+let grid = [];
+let paused = false;
+let lockedInPlace = new CustomEvent("lockedInPlace"); // track when a block is locked into place
