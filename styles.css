@@ -4,8 +4,7 @@
     position: absolute;
 }
 
-.container {
-    position: relative;
+#gameContainer {
     width: 100%;
     height: 100%;
 }
@@ -55,10 +54,37 @@
     justify-content: center;
 }
 
-h1 {
+.overlayHeading {
     font-size: 48px;
     font-family: Arial;
     color: white;
     position: absolute;
     margin: 0;
+}
+
+#columnContainer {
+    position: relative;
+}
+
+#column1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#column2 {
+    position: absolute;
+    top: 0;
+    left: 500;
+}
+
+#scoreContainer {
+    position: absolute;
+    top: 550;
+    left: 0;
+}
+
+.scoreHeading {
+    font-size: 48px;
+    font-family: Arial;
 }

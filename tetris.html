@@ -6,33 +6,45 @@
 	</head>
 	
 	<body>
-		<div class = "container">
-			<div id="overlay">
-				<table border="0">
-					<tr>
-						<td>
-							<div class = "textBackground">
-								<h1 id="displayText">Game Over</h1>
-							</div>
-						</td>
-					</tr>
-					<tr height="10px" />
-					<tr>
-						<td align="center">
-							<button type="button" id="restartButton" onclick="reset()">
-								<h1 style="font-size: 22;">Restart</h1>
-							</button>
-						</td>
-					</tr>
-				</table>
+		<div id="columnContainer">
+			<div id="column1">
+				<div id="gameContainer">
+					<div id="overlay">
+						<table border="0">
+							<tr>
+								<td>
+									<div class = "textBackground">
+										<h1 id="displayText" class="overlayHeading">Game Over</h1>
+									</div>
+								</td>
+							</tr>
+							<tr height="10px" />
+							<tr>
+								<td align="center">
+									<button type="button" id="restartButton" onclick="reset()">
+										<h1 class="overlayHeading" style="font-size: 22;">Restart</h1>
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div id="blockContainer" class="base" />
+				</div>
 			</div>
-			<div id="blockContainer" class="base" />
+
+			<div id="column2">
+				<div id="scoreContainer">
+					<h1 class="scoreHeading">Score</h1>
+					<h1 id="score" style="font-size: 40;" class="scoreHeading">0</h1>
+				</div>
+			</div>
 		</div>
-		
+
 		<script>
 			let container = document.getElementById("blockContainer");
 			let overlay = document.getElementById("overlay");
 			let displayText = document.getElementById("displayText");
+			let scoreText = document.getElementById("score");
 			grid = createGrid();
 
 			document.onkeydown = checkKey;

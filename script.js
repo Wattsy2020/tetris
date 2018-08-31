@@ -124,12 +124,15 @@ class Tetromino {
             currentTetromino = null;
             clearInterval(this.fallSchedule);
 
-            // clear any full rows
+            // clear any full rows and increment score
+            let numCleared = 0;
             grid.forEach(row => {
                 if (rowFull(row)){
                     clearRow(row);
+                    numCleared++;
                 }
             });
+            updateScore(numCleared);
 
             // move rows down into place and call gameLoop by raising an event
             setTimeout(moveRowsDown, 200);
@@ -268,6 +271,11 @@ function moveRowsDown(){
             }
         }
     }
+}
+
+function updateScore(rowsCleared){
+    let points = Math.pow(rowsCleared, 2)*1000;
+    scoreText.textContent = parseInt(scoreText.textContent) + points;
 }
 
 function rowFull(row){
@@ -422,6 +430,7 @@ function reset(){
         paused = false;
     }
 
+    scoreText.textContent = "0";
     overlay.style.visibility = "hidden";
     gameLoop();
 }
