@@ -19,6 +19,17 @@ class Block{
     turnOn(color){
         this.blockE.style.backgroundColor = color;
     }
+
+    // used to display an outline of where a tetromino would fall
+    highlight(){
+        this.blockE.style.outline = "none";
+        this.blockE.style.boxShadow = "0 0 10px #9cbbed inset";
+}
+
+    turnOffHighlight(){
+        this.blockE.style.boxShadow = "none";
+        this.blockE.style.border = "3px solid black";
+    }
 }
 
 class Tetromino {
@@ -81,10 +92,7 @@ class Tetromino {
     moveDown(){
         if (paused){return;}
 
-        let newPositions = [];
-        this.blocks.forEach(pos => {
-            newPositions.push([pos[0] + 1, pos[1]]);
-        });
+        let newPositions = this.blocks.map(pos => [pos[0] + 1, pos[1]]);
 
         if (this.noCollision(newPositions)){
             this.center_row += 1;
@@ -109,10 +117,7 @@ class Tetromino {
     }
 
     moveLeft(){
-        let newPositions = [];
-        this.blocks.forEach(pos => {
-            newPositions.push([pos[0], pos[1] - 1]);
-        });
+        let newPositions = this.blocks.map(pos => [pos[0], pos[1] - 1]);
 
         if (this.noCollision(newPositions)){
             this.center_col -= 1;
@@ -121,10 +126,7 @@ class Tetromino {
     }
 
     moveRight(){
-        let newPositions = [];
-        this.blocks.forEach(pos => {
-            newPositions.push([pos[0], pos[1] + 1]);
-        });
+        let newPositions = this.blocks.map(pos => [pos[0], pos[1] + 1]);
 
         if (this.noCollision(newPositions)){
             this.center_col += 1;
@@ -143,22 +145,14 @@ class Tetromino {
     // the location of the blocks from the center of the Tetromino
     // also performs the reverse operation
     blockDistanceFromCenter(grid){
-        let matrix = [];
-        grid.forEach(pos => {
-            matrix.push([this.center_row - pos[0], this.center_col - pos[1]]);
-        });
-        return matrix;
+        return grid.map(pos => [this.center_row - pos[0], this.center_col - pos[1]]);
     }
 
     // rotate a Tetromino around it's center (direction = -1 means anti clockwise)
     // uses the fact that if the dot product of two vectors is 0 they are perpendicular
     rotate(direction){
         let centerDistances = this.blockDistanceFromCenter(this.blocks);
-
-        let rotated = [];
-        centerDistances.forEach(pos => {
-            rotated.push([-direction*pos[1], direction*pos[0]]);
-        });
+        let rotated = centerDistances.map(pos => [-direction*pos[1], direction*pos[0]]);
 
         rotated = this.blockDistanceFromCenter(rotated);
         if (this.noCollision(rotated)){
@@ -227,7 +221,7 @@ class ITet extends Tetromino {
 
 // moves entire rows down at a time after rows have been cleared
 function moveRowsDown(){
-    let downAmount = 0; // ammount to move rows down by
+    let downAmount = 0; // amount to move rows down by
     for (let i = rows - 1; i >= 0; i--){
         if (rowEmpty(grid[i])){
             downAmount += 1;
@@ -283,10 +277,10 @@ function createGrid(){
     }
 
     // set size of overlay and container to match the grid
-    overlay.style.width = (cols*sideLength + 20)+ "px";
+    overlay.style.width = (cols*sideLength + 20) + "px";
     overlay.style.height = (rows*sideLength + 20) + "px";
-    container.style.width = (cols*sideLength)+"px";
-    container.style.height = (rows*sideLength)+ "px";
+    container.style.width = (cols*sideLength) + "px";
+    container.style.height = (rows*sideLength) + "px";
 
     return grid;
 }
@@ -332,23 +326,18 @@ function checkKey(key){
         case 38: 
             currentTetromino.rotate(-1);
             break;
-
         case 40:
             currentTetromino.rotate(1);
             break;
-        
         case 37:
             currentTetromino.moveLeft();
             break;
-
         case 39:
             currentTetromino.moveRight();
             break;
-
         case 32:
             currentTetromino.drop();
             break;
-
         case 80:
             paused = !paused;
             if (paused){
@@ -372,7 +361,7 @@ function clearBlock(){
 }
 
 function clearGrid(){
-    // construct list of blocks to turn off
+    // construct list of blocks that are turned on
     toClear = [];
     grid.forEach(row => {
         row.forEach(block => {
