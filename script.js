@@ -23,8 +23,8 @@ class Block{
     // used to display an outline of where a tetromino would fall
     highlight(){
         this.blockE.style.outline = "none";
-        this.blockE.style.boxShadow = "0 0 10px #9cbbed inset";
-}
+        this.blockE.style.boxShadow = "0 0 10px blue inset";
+    }
 
     turnOffHighlight(){
         this.blockE.style.boxShadow = "none";
@@ -38,6 +38,7 @@ class Tetromino {
         this.center_col = center_col;
         this.color = color; 
         this.blocks = [];
+        this.futureBlocks = [];
     }
 
     // checks if placing the tetromino is not possible i.e. game is over
@@ -73,26 +74,46 @@ class Tetromino {
     }
 
     turnOffBlocks(){
-        this.blocks.forEach(pos => {
-            grid[pos[0]][pos[1]].turnOff();
+        this.blocks.forEach(pos => grid[pos[0]][pos[1]].turnOff());
+    }
+
+    turnOnBlocks(blocks){
+        blocks.forEach(pos => grid[pos[0]][pos[1]].turnOn(this.color));
+    }
+
+    turnOffHighlight(){
+        if (this.futureBlocks != null){
+            this.futureBlocks.forEach(pos => grid[pos[0]][pos[1]].turnOffHighlight());
+        }
+    }
+
+    turnOnHighlight(blocks){
+        blocks.forEach(pos => {
+            if (!this.included(pos)){
+                grid[pos[0]][pos[1]].highlight();
+            }
         });
     }
 
-    // turn off current blocks and turn on blocks in the new positions
+    // update the block positions and the highlight of the future positions
     switchPosition(newPositions){
         this.turnOffBlocks();
-
-        newPositions.forEach(pos => {
-            grid[pos[0]][pos[1]].turnOn(this.color);
-        });
-
+        this.turnOnBlocks(newPositions);
         this.blocks = newPositions;
+
+        this.turnOffHighlight();
+        this.futureBlocks = this.futurePosition();
+        this.turnOnHighlight(this.futureBlocks);
+    }
+
+    mapDownwards(grid){
+        return grid.map(pos => [pos[0] + 1, pos[1]]);
     }
 
     moveDown(){
         if (paused){return;}
 
-        let newPositions = this.blocks.map(pos => [pos[0] + 1, pos[1]]);
+        let newPositions = this.mapDownwards(this.blocks);
 
         if (this.noCollision(newPositions)){
             this.center_row += 1;
@@ -139,6 +160,17 @@ class Tetromino {
         clearInterval(this.fallSchedule);
         let t = this;
         this.fallSchedule = setInterval(function(){t.moveDown();}, timeInterval/100);
+    }
+
+    // calculate where the tetromino would be if it fell straight down from its current position
+    futurePosition(){
+        let previous = this.blocks;
+        let futureBlocks = previous;
+        while (this.noCollision(futureBlocks)){
+            previous = futureBlocks;
+            futureBlocks = this.mapDownwards(futureBlocks);
+        }
+        return previous;
     }
 
     // converts the location of the Tetrominos blocks on the grid into
@@ -383,9 +415,9 @@ function displayMessage(message){
 function reset(){
     // reset the game state, needed if reset() is called when paused
     if (currentTetromino != null){
-        grid.forEach(row => { 
-            clearRow(row);
-        });
+        grid.forEach(row => clearRow(row));
+        currentTetromino.turnOffHighlight();
+
         clearInterval(currentTetromino.fallSchedule);
         paused = false;
     }
@@ -404,16 +436,16 @@ function gameLoop(){
     else{
         // flash Tetromino
         let turnOff = function(){newTet.turnOffBlocks();};
-        let turnOn = function(){newTet.switchPosition(newTet.blocks);};
+        let turnOn = function(){newTet.turnOnBlocks(newTet.blocks);};
 
         turnOn();
-        setTimeout(turnOff, 1000);
+        setTimeout(turnOff, 500);
+        setTimeout(turnOn, 1000);
+        setTimeout(turnOff, 1500);
         setTimeout(turnOn, 2000);
-        setTimeout(turnOff, 3000);
-        setTimeout(turnOn, 4000);
         
         // remove every block one by one, once finished display the Game Over Screen
-        setTimeout(clearGrid, 5000); 
+        setTimeout(clearGrid, 2500); 
     }
 }
 

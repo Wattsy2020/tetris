@@ -1,5 +1,5 @@
 .block {
-    outline: 3px solid black;
+    border: 3px solid black;
     background-color: white;
     position: absolute;
 }
@@ -27,6 +27,7 @@
 }
 
 #overlay {
+    margin: 4px;
     position: absolute; 
     z-index: 10;
 
