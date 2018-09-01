@@ -78,16 +78,22 @@
     left: 500;
 }
 
-#nextBlockContainer {
+#infoContainer {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-#miniGridContainer {
+#nextBlockContainer {
     position: absolute;
     top: 100;
     left: 0;
+}
+
+#storageBlockContainer {
+    position: absolute;
+    top: 100;
+    left: 100;
 }
 
 #scoreContainer {

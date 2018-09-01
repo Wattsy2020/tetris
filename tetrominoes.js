@@ -53,12 +53,12 @@ class Tetromino {
         this.previewPosition = this.blockDistanceFromCenter(this.previewPosition, [1, 0]);
     }
 
-    showPreview(){
-        this.previewPosition.forEach(pos => miniGrid[pos[0]][pos[1]].turnOn(this.color));
+    showPreview(grid){
+        this.previewPosition.forEach(pos => grid[pos[0]][pos[1]].turnOn(this.color));
     }
 
-    turnOffPreview(){
-        this.previewPosition.forEach(pos => miniGrid[pos[0]][pos[1]].turnOff());
+    turnOffPreview(grid){
+        this.previewPosition.forEach(pos => grid[pos[0]][pos[1]].turnOff());
     }
 
     // turns on the tetromino (only used once after initialisation)

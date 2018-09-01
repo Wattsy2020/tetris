@@ -35,9 +35,10 @@
 			</div>
 
 			<div id="column2">
-				<div id="nextBlockContainer">
+				<div id="infoContainer">
 					<h1 class="scoreHeading">Next</h1>
-					<div id="miniGridContainer"></div>
+					<div id="nextBlockContainer"></div>
+					<div id="storageBlockContainer"></div>
 				</div>
 				<div id="scoreContainer">
 					<h1 class="scoreHeading">Score</h1>
@@ -48,7 +49,8 @@
 
 		<script>
 			let mainGridContainer = document.getElementById("blockContainer");
-			let miniGridContainer = document.getElementById("miniGridContainer");
+			let nextBlockContainer = document.getElementById("nextBlockContainer");
+			let storageBlockContainer = document.getElementById("storageBlockContainer");
 			let overlay = document.getElementById("overlay");
 			let displayText = document.getElementById("displayText");
 			let scoreText = document.getElementById("score");
@@ -56,7 +58,8 @@
 			let rows = 18;
 			let cols = 10;
 			let grid = createGrid(mainGridContainer, rows, cols);
-			let miniGrid = createGrid(miniGridContainer, 4, 2);
+			let nextBlockGrid = createGrid(nextBlockContainer, 4, 2);
+			let storageBlockGrid = createGrid(storageBlockContainer, 4, 2);
 
 			// set size of overlay to match the grid
 			overlay.style.width = (cols*sideLength + 20) + "px";
@@ -66,6 +69,8 @@
 			mainGridContainer.addEventListener("lockedInPlace", gameLoop);
 
 			let newTet = createTetromino();
+			let storeTet = createTetromino();
+			storeTet.showPreview(storageBlockGrid);
 			gameLoop();
 		</script>
 	</body>

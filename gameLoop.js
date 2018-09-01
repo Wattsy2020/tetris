@@ -99,6 +99,17 @@ function checkKey(key){
                 overlay.style.visibility = "hidden";
             }
             break;
+        case 90:
+            // swap the next tetromino with the one in the storage box
+            newTet.turnOffPreview(nextBlockGrid);
+            storeTet.turnOffPreview(storageBlockGrid);
+            newTet.showPreview(storageBlockGrid);
+            storeTet.showPreview(nextBlockGrid);
+
+            let temp = newTet;
+            newTet = storeTet;
+            storeTet = temp;
+            break;
     }
 }
 
@@ -141,6 +152,9 @@ function reset(){
         clearInterval(currentTetromino.fallSchedule);
         paused = false;
     }
+    storeTet.turnOffPreview(storageBlockGrid);
+    storeTet = createTetromino();
+    storeTet.showPreview(storageBlockGrid);
 
     scoreText.textContent = "0";
     overlay.style.visibility = "hidden";
@@ -149,12 +163,12 @@ function reset(){
 
 function gameLoop(){
     if (!newTet.gameOver()){
-        newTet.turnOffPreview();
+        newTet.turnOffPreview(nextBlockGrid);
         newTet.activate();
         currentTetromino = newTet;
 
         newTet = createTetromino();
-        newTet.showPreview();
+        newTet.showPreview(nextBlockGrid);
     }
     else{
         // flash Tetromino
