@@ -30,14 +30,14 @@
 							</tr>
 						</table>
 					</div>
-					<div id="blockContainer" class="base" />
+					<div id="blockContainer" class="base"></div>
 				</div>
 			</div>
 
 			<div id="column2">
 				<div id="nextBlockContainer">
 					<h1 class="scoreHeading">Next</h1>
-					<div id="miniGridContainer" />
+					<div id="miniGridContainer"></div>
 				</div>
 				<div id="scoreContainer">
 					<h1 class="scoreHeading">Score</h1>
@@ -47,14 +47,23 @@
 		</div>
 
 		<script>
-			let container = document.getElementById("blockContainer");
+			let mainGridContainer = document.getElementById("blockContainer");
+			let miniGridContainer = document.getElementById("miniGridContainer");
 			let overlay = document.getElementById("overlay");
 			let displayText = document.getElementById("displayText");
 			let scoreText = document.getElementById("score");
-			grid = createGrid();
+
+			let rows = 18;
+			let cols = 10;
+			let grid = createGrid(mainGridContainer, rows, cols);
+			let miniGrid = createGrid(miniGridContainer, 4, 2);
+
+			// set size of overlay to match the grid
+			overlay.style.width = (cols*sideLength + 20) + "px";
+    		overlay.style.height = (rows*sideLength + 20) + "px";
 
 			document.onkeydown = checkKey;
-			container.addEventListener("lockedInPlace", gameLoop);
+			mainGridContainer.addEventListener("lockedInPlace", gameLoop);
 			gameLoop();
 		</script>
 	</body>

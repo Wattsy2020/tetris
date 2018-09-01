@@ -136,7 +136,7 @@ class Tetromino {
 
             // move rows down into place and call gameLoop by raising an event
             setTimeout(moveRowsDown, 200);
-            setTimeout(function(){container.dispatchEvent(lockedInPlace);}, 300);
+            setTimeout(function(){mainGridContainer.dispatchEvent(lockedInPlace);}, 300);
         }
     }
 
