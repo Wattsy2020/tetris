@@ -40,8 +40,9 @@ function getRandomInt(min, max) {
 
 function createTetromino(){
     let color = colors[getRandomInt(0, colors.length - 1)];
-
+    let newTet;
     let type = getRandomInt(0, 6);
+
     switch (type){
         case 0:
             newTet = new LTet1(1, cols/2, color);
@@ -65,6 +66,8 @@ function createTetromino(){
             newTet = new ITet(1, cols/2, color);
             break;
     }
+
+    newTet.calculatePreview();
     return newTet;
 }
 
@@ -145,11 +148,13 @@ function reset(){
 }
 
 function gameLoop(){
-    let newTet = createTetromino();
-
     if (!newTet.gameOver()){
+        newTet.turnOffPreview();
         newTet.activate();
         currentTetromino = newTet;
+
+        newTet = createTetromino();
+        newTet.showPreview();
     }
     else{
         // flash Tetromino

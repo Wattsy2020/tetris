@@ -39,11 +39,26 @@ class Tetromino {
         this.color = color; 
         this.blocks = [];
         this.futureBlocks = [];
+        this.previewPosition = [];
     }
 
     // checks if placing the tetromino is not possible i.e. game is over
     gameOver(){
         return this.blocks.some(pos => grid[pos[0]][pos[1]].isOn());
+    }
+
+    calculatePreview(){ 
+        // translate the tetrominoes blocks so that their center is at 1, 0
+        this.previewPosition = this.blockDistanceFromCenter(this.blocks);
+        this.previewPosition = this.blockDistanceFromCenter(this.previewPosition, [1, 0]);
+    }
+
+    showPreview(){
+        this.previewPosition.forEach(pos => miniGrid[pos[0]][pos[1]].turnOn(this.color));
+    }
+
+    turnOffPreview(){
+        this.previewPosition.forEach(pos => miniGrid[pos[0]][pos[1]].turnOff());
     }
 
     // turns on the tetromino (only used once after initialisation)
@@ -179,8 +194,8 @@ class Tetromino {
     // converts the location of the Tetrominos blocks on the grid into
     // the location of the blocks from the center of the Tetromino
     // also performs the reverse operation
-    blockDistanceFromCenter(grid){
-        return grid.map(pos => [this.center_row - pos[0], this.center_col - pos[1]]);
+    blockDistanceFromCenter(blocks, center=[this.center_row, this.center_col]){
+        return blocks.map(pos => [center[0] - pos[0], center[1] - pos[1]]);
     }
 
     // rotate a Tetromino around it's center (direction = -1 means anti clockwise)
@@ -209,6 +224,12 @@ class LTet2 extends Tetromino {
         super(center_row, center_col, color);
         this.blocks = [[center_row, center_col], [center_row + 1, center_col - 1],
                        [center_row - 1, center_col], [center_row + 1, center_col]];
+    }
+
+    // need to shift all blocks to the right by one to fit in the preview box
+    calculatePreview(){
+        super.calculatePreview();
+        this.previewPosition = this.previewPosition.map(pos => [pos[0], pos[1] + 1]);
     }
 }
 
