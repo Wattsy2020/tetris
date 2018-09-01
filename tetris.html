@@ -1,7 +1,9 @@
 <html>
 	<head>
 		<title>Tetris</title>
-		<script src="script.js"></script>
+		<script src="tetrominoes.js"></script>
+		<script src="gameLoop.js"></script>
+		<script src="initialiseGrid.js"></script>
 		<link rel="stylesheet" href="styles.css">
 	</head>
 	
@@ -33,6 +35,10 @@
 			</div>
 
 			<div id="column2">
+				<div id="nextBlockContainer">
+					<h1 class="scoreHeading">Next</h1>
+					<div id="miniGridContainer" />
+				</div>
 				<div id="scoreContainer">
 					<h1 class="scoreHeading">Score</h1>
 					<h1 id="score" style="font-size: 40;" class="scoreHeading">0</h1>
@@ -48,8 +54,7 @@
 			grid = createGrid();
 
 			document.onkeydown = checkKey;
-			container.addEventListener("lockedInPlace", gameLoop);			
-
+			container.addEventListener("lockedInPlace", gameLoop);
 			gameLoop();
 		</script>
 	</body>
