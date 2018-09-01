@@ -1,12 +1,10 @@
-const rows = 18;
-const cols = 10;
 const sideLength = 40;
 let lengthStr = sideLength+"px";
 
 
 // dynamically create a grid of divs with CSS class block
 // then create Blocks and add them to the grid so they can be manipulated by js
-function createGrid(){
+function createGrid(container, rows, cols){
     let grid = [];
     for (let i = 0; i < rows; i++){
         let row = [];
@@ -25,11 +23,7 @@ function createGrid(){
         grid.push(row)
     }
 
-    // set size of overlay and container to match the grid
-    overlay.style.width = (cols*sideLength + 20) + "px";
-    overlay.style.height = (rows*sideLength + 20) + "px";
     container.style.width = (cols*sideLength) + "px";
     container.style.height = (rows*sideLength) + "px";
-
     return grid;
 }
