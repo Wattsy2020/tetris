@@ -70,12 +70,19 @@
     position: absolute;
     top: 0;
     left: 0;
+    width: 300;
 }
 
 #column2 {
     position: absolute;
     top: 0;
-    left: 500;
+    left: 300;
+}
+
+#column3 {
+    position: absolute;
+    top: 0;
+    left: 800;
 }
 
 #infoContainer {
@@ -105,4 +112,9 @@
 .scoreHeading {
     font-size: 48px;
     font-family: Arial;
+}
+
+p {
+    font-family: Arial;
+    margin: 10;
 }
